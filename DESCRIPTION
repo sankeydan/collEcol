@@ -1,0 +1,14 @@
+Package: collEcol
+Type: Package
+Title: A Package for Collective Animal Spatial Data Plots and Analysis
+Version: 0.1.0
+Date: 2017-08-21 
+Author: Dan Sankey
+Maintainer: Dan Sankey <dwsankey@gmail.com>
+Description: Here is a package I am using for my PhD but I hope you will find some of the functions useful. Simply it is a collection of functions useful for plotting, manipulating and analysing spatial data of animal groups. 
+License: GPL-2
+Encoding: UTF-8
+Imports: stringr, chron 
+LazyData: true
+RoxygenNote: 6.0.1
+
