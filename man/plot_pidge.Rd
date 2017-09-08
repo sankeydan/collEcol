@@ -6,9 +6,10 @@
 \usage{
 plot_pidge(type = c("solo", "group"), snap.or.vid = "video",
   no.error.messages = F, borders = 800, tail.size = 20, frame.size = 1,
-  f_u = "all", finishers = T, satellite = T, satellite.zoom = 19,
-  d2c.plot = T, window = c("full", "tail.size"), cent.radius = 60,
-  files = files.chooser(folder = "GPS"))
+  grid.width = 10, png = T, hz = 5, lines.or.points = "lines",
+  f_u = "all", finishers = T, plot.links = T, satellite = T,
+  satellite.zoom = 19, d2c.plot = T, window = c("full", "tail.size"),
+  cent.radius = 60, files = files.chooser(folder = "GPS"))
 }
 \description{
 A handy and interactive plotter for solo or group GPS tracks
