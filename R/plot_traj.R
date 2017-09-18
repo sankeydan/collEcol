@@ -55,8 +55,6 @@ plot_traj = function( data, type = c("solo", "group") , snap.or.vid = "video",
         for ( i in 1:length(ugf)){
           for ( i in 18:length(ugf)){
 
-            # load data
-            load( file.path ( PROJHOME ,  "data", "g&cGPS", paste0("g&c", ugf[i] , ".rda"))) # the object with which this file is called "data"
 
             indiv = names(data[1,1,1:length(data[1,1,])-1])
             load ( file.path( PROJHOME , "SmallDFs" , "pigeon_nums.rda"))

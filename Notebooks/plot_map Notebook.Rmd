@@ -1,0 +1,89 @@
+---
+title: "plot_map() - Tutorial"
+output: html_notebook
+---
+
+
+
+
+This is an online tutorial for the plot_map function in collEcol package by Dan Sankey
+
+
+If you are interested in making a googlemap style plot or video of your solo or group GPS data, but aren't that familiar with the documentation/help files for the collEcol package, then this tutorial should be for you. 
+Hopefully this tutorial will help solve all your problems, but if not, or you would like me to edit the functions to perform something differently, then don't hesitate to contact me on dwsankey@gmail.com with any questions or suggestions. 
+
+
+# 1: Set up environment
+
+
+```{r}
+if(!require(pacman))
+  install.packages("pacman") # Functions for loading required libraries 
+
+library(pacman)
+p_load(ggmap, ggplot2 , plyr , collEcol)
+
+```
+
+
+---
+
+# 2: Solo GPS traces 
+
+Using the example data (from a pigeon homing flight)
+```{R}
+
+data("solo")
+
+{plot_map(data = data , type = "solo" , image.or.vid = "image", zoom = 13)
+}        
+
+```
+
+
+Plot of a pigeon's flight over Surrey, England
+
+
+---
+
+# 3. Group/video trace
+
+
+
+```{R}
+
+# load in the data
+
+data("group") # these data are called data2
+
+
+suppressWarnings(plot_map (data = data2 , type = "group" ,  image.or.vid = "video", tail.size = 20, frame.size = 5, file.to.folder = F, zoom = 19)) # Warnings are supressed because there are quite a few of them. Not important if the figures look right to you and I
+
+```
+
+---
+
+# 4: Export images into folder to make a video
+
+
+Before you this next  chunk it is good to set your working directory to the one to which you would like the images to store. 
+
+
+
+```{R}
+
+suppressWarnings(plot_map(data = data2, wd = getwd(), plot_name = "my_video" , file.to.folder = T, type = "group" ,  image.or.vid = "video", tail.size = 20, frame.size = 5, zoom = 19))
+
+```
+
+Go to your working directory and export the .png files into a movie maker software. 
+
+I highly reccommend imagej as it is efficient, free and doesn't take up a lot of memory. 
+
+Happy coding! 
+
+:) 
+
+
+
+

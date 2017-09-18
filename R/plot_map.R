@@ -1,117 +1,109 @@
-#' plot.pidge
+#' plot_map
 #'
-#' A handy and interactive plotter for solo or group GPS tracks
-#' @params type Solo or Group plots.
-#' @params satellite True or False
-#' @params satellite soom 19 is good for video
+#' A handy and interactive plotter for solo or group GPS tracks. Uses ggmaps to produce images or videos of animal trajectories on a googlemaps background.
+#' @param data data array with dimensions time (rows), longitude / latitude (in that order; columns) & individual (3rd dimension). No third dimension necessary for solo plots.
+#' @param type Solo or Group plots.
+#' @param image.or.vid "image" or "video" (sequence of images) to be produced
+#' @param tail.size animals represented by current position and the previous n positions (video only)
+#' @param frame.size plot every row of data, or every 1/frame size for shorter running speeds and output files (video only)
+#' @param zoom zoom = 19 is good for video. Other plot types are worth playing around with, try 13 for approx 5 km square
+#' @param lines.or.points On the plotted map, animal trajectory represented by either "lines" or "points"
+#' @param maptype "satellite" is default, though check ?get_map in the ggmap package for more options
+#' @param wd Specify the working directory that you would like to save the plots into.
+#' @param col Colour of plotted trajectory (solo only)
+#' @param lwd Thickness of line
+#' @param file.to.folder TRUE if you want to make videos when happy with other params, but for testing videos set to FALSE
 #' @export
-#'
 
-plot_map = function( type = c("solo", "group") , image.or.vid = "video", no.error.messages = F,
-                       borders = 800, tail.size = 20, frame.size = 1, grid.width  = 10, png = T,
-                     hz = 5, lines.or.points = "lines",
-                       f_u = "all" , finishers = T , plot.links = T ,  maptype = "satellite",
-                     zoom = 19, d2c.plot = T, window = c("full", "tail.size"),
-                     files = files.chooser(folder = "GPS") ){
 
-  library(stringr)
-  library(ggmap)
-  library(plyr)
 
-  if ( no.error.messages == T){
+plot_map = function( data,  type = c("solo", "group") , image.or.vid = "video",
+                     tail.size = 20, frame.size = 1, wd = getwd(), plot_name = "my_plot" ,
+                     lines.or.points = "lines", col = "red" , lwd = 2, file.to.folder = T,
+                     maptype = "satellite", zoom = 19 ){
 
-    if (zoom == 19){
-      wps.lat = 0.0005 # Warning alerts if you don't use this scaler
-      wps.lon = 0.0007
-    }
+  # data = data2
+  # type = "group"
+  # image.or.vid = "video"
+  # tail.size = 20
+  # file.to.folder = T
+  # zoom = 19
+  # frame.size = 5
+  # maptype = "satellite"
+
+  stopifnot(length(type) == 1 & length(image.or.vid) == 1)
+
+
+  if ( type == "solo"){
+
+
+    data = as.data.frame(data)
+    names(data) = c("lon", "lat") # give the columns names
+
+    centre = c ( (max( data[ ,1] ) + min( data [ ,1]) ) /2 , (max( data[ ,2] ) + min( data [ ,2]) ) /2 ) # find centre for map
+
+    map = ggmap::get_map( location = centre,
+                          zoom = zoom,
+                          maptype = maptype) # load map
+    p = ggmap::ggmap(map)
+
+    p = p + ggplot2::geom_path (data= data ,  aes(x=lon, y=lat), color = col , size = lwd)
+
+    print(p)
   }
 
-  if( type == "solo") files = files.chooser(folder = "mGPS", g_s = "s", f_u = f_u)
+  if ( type == "group"){
 
-  if( type == "group"){
+    for ( j in seq(tail.size,nrow(data),frame.size)){
 
-    ugf = unique(uff( files , output = "flight.num")) # unique group flight
+      data2 = plyr::adply(data[(j-tail.size+1):j,1:2,],3)
+      names(data2) = c("id" , "lon", "lat") # give the columns names
 
-  }
+      centroid = data.frame ( lon = mean(data[j,1,]),
+                              lat = mean(data[j,2,]))# A more advanced centriod algorithm is currently being updated for potential publication, email me and I can send it over though if you're interested.
 
-
-
-
-  if( type == "group"){
-
-    if( image.or.vid == "video"){
-
-        subDir = paste0( type , "_satZm_", zoom, "_FrSz_" ,
-                         frame.size, "_TlSz_", tail.size,"_", maptype)
-        if (file.exists(file.path(PROJHOME, "videos", subDir)) == F){
-          dir.create(file.path(PROJHOME, "videos", subDir))
-        }
-        #for ( i in 1:length(ugf)){
-        for( i in 1){
-
-          load( file.path ( PROJHOME ,  "data", "g&cGPS", paste0("g&c", ugf[i] , ".rda"))) # the object with which this file is called "data"
-          num.indiv = length(data[1,1,])-1
-          indiv = names(data[1,1,1:num.indiv])
-
-
-          if ( file.exists(file.path(PROJHOME, "videos", subDir,  ugf[i] )) == F){
-            dir.create(file.path(PROJHOME, "videos", subDir,  ugf[i] ))
-          }
-
-          for ( j in seq(tail.size,nrow(data),frame.size)){
-            #for ( j in seq(tail.size,200,frame.size)){
-            #for ( j in 570:nrow(data)){
-
-            data2 = adply(data[(j-tail.size+1):j,c("lon","lat"),1:num.indiv],3)
-            # png(file = file.path( PROJHOME , "videos", subDir, ugf[i], j ))
-
-
-            map = get_map( location = c(data[j,"lon","centroid"],
-                                        data[j,"lat","centroid"]),
-                           zoom = zoom,
-                           maptype = maptype)
-
-            p = ggmap(map, extent = "device")  +
-              theme(axis.line = element_blank(),
-                    axis.text = element_blank(),
-                    axis.ticks = element_blank(),
-                    plot.margin = unit(c(0, 0, -1, -1), 'lines')) +
-              xlab('') +
-              ylab('')
-            if ( no.error.messages == T){
-              for ( k in 1:num.indiv){
-                sub = (((k-1)* tail.size)+1):(k * tail.size)
-                data3 =  data2[sub[data2[sub,"lat"] <  data[j,"lat","centroid"]+wps.lat  &
-                                     data2[sub,"lat"] >  data[j,"lat","centroid"]-wps.lat &
-                                     data2[sub,"lon"] <  data[j,"lon","centroid"]+wps.lon  &
-                                     data2[sub,"lon"] >  data[j,"lon","centroid"]-wps.lon ] ,]  # convoluted but this is basically to remove warning messages
-                p = p + geom_path (data= data3, aes(x=lon, y=lat), color= rain[k], size = 2)
-
-              }
-            } else {
-
-
-              for ( k in 1:num.indiv){
-                sub = (((k-1)* tail.size)+1):(k * tail.size)
-                p = p + geom_path (data= data2[sub,], aes(x=lon, y=lat), color= rain[k], size = 2)
-
-              }
-            }
-            print(j)
-            print(p)
-            #  dev.off()
-          }
-
-        }
-
-
-
+      if( file.to.folder){
+        png(file = file.path( wd , paste0( plot_name,  j , ".png")))
       }
 
 
+      map = ggmap::get_map( location = c(centroid$lon,
+                                         centroid$lat),
+                            zoom = zoom,
+                            maptype = maptype)
 
+      p = ggmap::ggmap(map, extent = "device")  +
+        theme(axis.line = element_blank(),
+              axis.text  = element_blank(),
+              axis.ticks = element_blank(),
+              plot.margin = unit(c(0, 0, -1, -1), 'lines')) +
+        xlab('') +
+        ylab('')
+
+      rain = rainbow(dim(data)[3])
+
+      for ( k in 1:dim(data)[3]){
+        sub = (((k-1)* tail.size)+1):(k * tail.size)
+        p = p + ggplot2::geom_path (data= data2[sub,], aes(x=lon, y=lat), color= rain[k], size = 2)
+
+      }
+
+      print( paste ( j , "/" , nrow(data) ))
+      print(suppressWarnings(p))
+
+      if(file.to.folder){
+        dev.off()
+      }
+    }
   }
 }
+
+
+
+
+
+
+
 
 
 
