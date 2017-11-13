@@ -1,0 +1,10 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/309499/0a787734187148da9098a5a1f3756929
+bundleId: https://api.rpubs.com/api/v1/document/309499/0a787734187148da9098a5a1f3756929
+url: http://rpubs.com/sankeydan/309499
+when: 1505805344.8105

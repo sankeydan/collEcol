@@ -4,13 +4,13 @@
 \alias{plot_map}
 \title{plot_map}
 \usage{
-plot_map(data, type = c("solo", "group"), image.or.vid = "video",
+plot_map(data, type = c("solo", "group"), image.or.vid = "image",
   tail.size = 20, frame.size = 1, wd = getwd(), plot_name = "my_plot",
   lines.or.points = "lines", col = "red", lwd = 2, file.to.folder = T,
-  maptype = "satellite", zoom = 19)
+  centre = NA, maptype = "satellite", zoom = 19)
 }
 \arguments{
-\item{data}{data array with dimensions time (rows), longitude / latitude (in that order; columns) & individual (3rd dimension). No third dimension necessary for solo plots.}
+\item{data}{data frame or list of data frames with dimensions time (rows), longitude / latitude (in that order; columns) & individual (3rd dimension). No third dimension necessary for solo plots.}
 
 \item{type}{Solo or Group plots.}
 
@@ -29,6 +29,8 @@ plot_map(data, type = c("solo", "group"), image.or.vid = "video",
 \item{lwd}{Thickness of line}
 
 \item{file.to.folder}{TRUE if you want to make videos when happy with other params, but for testing videos set to FALSE}
+
+\item{centre}{Choose your own centre points for the mapform: c(lon, lat)}
 
 \item{maptype}{"satellite" is default, though check ?get_map in the ggmap package for more options}
 

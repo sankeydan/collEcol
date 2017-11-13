@@ -1,22 +1,4 @@
 .RData
 .Rhistory
-pigeon_nums.rda
-videos
-plots
 .Rproj.user
-cropACC.R
-cut.files.r
-files.chooser.r
-gGPS.R
-metricF.R
-metrics_row.R
-mGPS.R
-namew.R
-neighbour_distances_centroid_and_fission.R
-slACC.R
-smalldf.r
-uff.r
-Unique_flight_information.r
-Fission analysis.nb.html
-Fission analysis.Rmd
-SmallDFs
+
