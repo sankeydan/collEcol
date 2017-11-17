@@ -6,11 +6,12 @@
 \usage{
 plot_map(data, type = c("solo", "group"), image.or.vid = "image",
   tail.size = 20, frame.size = 1, wd = getwd(), plot_name = "my_plot",
-  lines.or.points = "lines", col = "red", lwd = 2, file.to.folder = T,
+  lines.or.points = "lines", col = "red", axis.nums.size = 12,
+  axis.labs.size = 14, n.indiv = NULL, lwd = 2, file.to.folder = T,
   centre = NA, maptype = "satellite", zoom = 19)
 }
 \arguments{
-\item{data}{data frame or list of data frames with dimensions time (rows), longitude / latitude (in that order; columns) & individual (3rd dimension). No third dimension necessary for solo plots.}
+\item{data}{data frame or list of data frames with 2 dimensions: longitude & latitude (in that order; columns) For group plots, ensure data frames in the list have the same number of rows}
 
 \item{type}{Solo or Group plots.}
 
@@ -25,6 +26,8 @@ plot_map(data, type = c("solo", "group"), image.or.vid = "image",
 \item{lines.or.points}{On the plotted map, animal trajectory represented by either "lines" or "points"}
 
 \item{col}{Colour of plotted trajectory (solo only)}
+
+\item{n.indiv}{Number of individuals. Only use in group context.}
 
 \item{lwd}{Thickness of line}
 

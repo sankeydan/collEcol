@@ -1,9 +1,9 @@
 ---
 title: "plot_map() - Tutorial"
 output:
-  pdf_document: default
-  html_notebook: default
   html_document: default
+  html_notebook: default
+  pdf_document: default
 ---
 
 
@@ -44,12 +44,31 @@ plot_map(data = data , type = "solo" , image.or.vid = "image", zoom = 13)
 ```
 
 
-Plot of a pigeon's flight over Surrey, England
+Plot of a pigeon's flight over Surrey, England 
 
 
 ---
 
-## 3. Group/video trace
+
+# 3. Solo GPS trace videos 
+
+
+
+```{R}
+
+plot_map( data = data[1:60,] , file.to.folder = F, image.or.vid = "video", frame.size = 5)
+
+```
+
+This (above) is the function you would use to have a look at parameters and see if it really is the video you want, before saving by selecting `file.to.folder = T`. 
+
+Change the parameters, explore the function with ?plot_map
+
+I save an example to folder in the group video below. Follow that part of the tutorial for extra tips on saving your video. 
+
+---
+
+## 4. Group/video trace
 
 
 If you are happy with the parameters you would like for your video then skip straight to section 4. This section is just an example using my (very short) dataset. 
@@ -60,16 +79,20 @@ It is however, really important to practice with `file.to.folder = F` . Firstly,
 
 # load in the data
 
-data("group") # these data are called data2
+data("dataG") # these data are called dataG
+
+lapply(dataG,head,n=5) # First 5 rows 
+```
 
 
-suppressWarnings(plot_map (data = data2 , type = "group" ,  image.or.vid = "video", tail.size = 20, frame.size = 5, file.to.folder = F, zoom = 19)) # Warnings are supressed because there are quite a few of them. Not important if the figures look right to you and I
+```{R}
+plot_map (data = dataG , type = "group" ,  image.or.vid = "video", tail.size = 20, frame.size = 5, file.to.folder = F, zoom = 19, n.indiv = 8) 
 
 ``` 
 
 ---
 
-## 4: Export images into folder to make a video
+## 5: Export images into folder to make a video
 
 
 Before you this next  chunk it is good to set your working directory to the one to which you would like the images to store. 
@@ -78,13 +101,16 @@ Before you this next  chunk it is good to set your working directory to the one 
 
 ```{R}
 
-suppressWarnings(plot_map(data = data2, wd = getwd(), plot_name = "my_video" , file.to.folder = T, type = "group" ,  image.or.vid = "video", tail.size = 20, frame.size = 5, zoom = 19))
+plot_map(data = dataG, wd = getwd(), plot_name = "my_video" , file.to.folder = T, type = "group" ,  image.or.vid = "video", tail.size = 20, frame.size = 5, zoom = 19, n.indiv = 8)
 
 ```
 
 Go to your working directory and export the .png files into a movie maker software. 
 
-I highly reccommend [imagej][1] as it is efficient, free and doesn't take up a lot of memory. 
+I highly reccommend [imagej][1] as it is efficient, free, and doesn't take up a lot of memory. 
+
+
+
 
 Happy coding! 
 
